@@ -12,6 +12,7 @@ using iTextSharp.text.pdf;
 using System.Text.RegularExpressions;
 using Spire.Pdf;
 using System.Drawing.Printing;
+using System.Management;
 
 namespace PrintService.Controllers
 {
@@ -43,6 +44,15 @@ namespace PrintService.Controllers
         [HttpPost("generate")]
         public IActionResult getPrint([FromBody] PrintModel print)
         {
+
+            bool result =  IsPrinterOnline(print.printer);
+            if (!result)
+            {
+                return Ok(2);
+            }
+
+
+
             var currentDirectory = Directory.GetCurrentDirectory(); //Ruta donden se encuntra el programa
             var absolutePath = $"{currentDirectory}\\testprinxt.pdf";
             var pagesPdf = 1;
@@ -123,6 +133,53 @@ namespace PrintService.Controllers
             }
 
             return Ok(1);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validar la compatibilidad de la plataforma", Justification = "<pendiente>")]
+        public bool IsPrinterOnline(string printerName)
+        {
+            string str = "";
+            bool online = false;
+
+            //set the scope of this search to the local machine
+            ManagementScope scope = new ManagementScope(ManagementPath.DefaultPath);
+            //connect to the machine
+            scope.Connect();
+
+            //query for the ManagementObjectSearcher
+            SelectQuery query = new SelectQuery("select * from Win32_Printer");
+
+            ManagementClass m = new ManagementClass("Win32_Printer");
+
+            ManagementObjectSearcher obj = new ManagementObjectSearcher(scope, query);
+
+            //get each instance from the ManagementObjectSearcher object
+            using (ManagementObjectCollection printers = m.GetInstances())
+                //now loop through each printer instance returned
+                foreach (ManagementObject printer in printers)
+                {
+                    //first make sure we got something back
+                    if (printer != null)
+                    {
+                        //get the current printer name in the loop
+                        str = printer["Name"].ToString().ToLower();
+
+                        //check if it matches the name provided
+                        if (str.Equals(printerName.ToLower()))
+                        {
+                            //since we found a match check it's status
+                            if (printer["WorkOffline"].ToString().ToLower().Equals("true") || printer["PrinterStatus"].Equals(7))
+                                //it's offline
+                                online = false;
+                            else
+                                //it's online
+                                online = true;
+                        }
+                    }
+                    else
+                        throw new Exception("No printers were found");
+                }
+            return online;
         }
     }
 }
