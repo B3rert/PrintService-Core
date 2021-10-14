@@ -19,13 +19,14 @@ namespace PrintService.Controllers
     [ApiController]
     public class PrintController : ControllerBase
     {
-        
+        //Retorna 1, Sirve para verificar que el servicio funciona
         [HttpGet("connection")]
         public int getConnection()
         {
             return 1;
         }
 
+        //Retorna una lista de imprsoras instaladas
         [HttpGet]
         public List<string> getPrinter()
         {
@@ -38,10 +39,10 @@ namespace PrintService.Controllers
             return response;
         }
 
+        //Genera un PDF con el texto recibido y lo imprime en la impreosra especificada
         [HttpPost("generate")]
         public IActionResult getPrint([FromBody] PrintModel print)
         {
-
             var currentDirectory = Directory.GetCurrentDirectory(); //Ruta donden se encuntra el programa
             var absolutePath = $"{currentDirectory}\\testprinxt.pdf";
             var pagesPdf = 1;
@@ -49,7 +50,6 @@ namespace PrintService.Controllers
             try
             {
                 //450 margen derecho
-
                 Document doc = new Document();
                 PdfWriter.GetInstance(doc, new FileStream(absolutePath, FileMode.Create));
                 Image logo_empresa = Image.GetInstance("Assets\\empresa_logo.jfif");
@@ -70,7 +70,6 @@ namespace PrintService.Controllers
                 //doc.Add(new Paragraph("The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from de Finibus Bonorum et Malorum by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."));
 
                 doc.Close();
-
             }
             catch (Exception e)
             {
@@ -124,9 +123,6 @@ namespace PrintService.Controllers
             }
 
             return Ok(1);
-            //return Ok($"Se imprimirán {print.copies} copias del documento {print.doc} en la impreosra {print.printer}");
         }
-
     }
-
 }
