@@ -40,7 +40,7 @@ namespace PrintService.Controllers
             }
             return response;
         }
-
+        /*
         protected void Page_Load(object sender, EventArgs e)
         {
         
@@ -57,12 +57,12 @@ namespace PrintService.Controllers
                 doc.Close();
                 writer.Close();
 
-                /*/ output
+                // output
                 Response.ContentType = "application/pdf;";
                 Response.AddHeader("Content-Disposition", "attachment; filename=clientfilename.pdf");
                 byte[] pdf = ms.ToArray();
                 Response.OutputStream.Write(pdf, 0, pdf.Length);
-                */
+                
             }
  
         }
@@ -82,6 +82,7 @@ namespace PrintService.Controllers
             }
         }
 
+        */
         //Genera un PDF con el texto recibido y lo imprime en la impreosra especificada
         [HttpPost("generate")]
         public IActionResult getPrint([FromBody] PrintModel print)
