@@ -9,6 +9,8 @@ namespace PrintService.Models
     {
         public string printer { get; set; }
         public string doc { get; set; }
+        public string name_emited { get; set; }
+        public string format { get; set; }
         public int copies { get; set; }
     }
 }
