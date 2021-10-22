@@ -47,7 +47,6 @@ namespace PrintService.Controllers
             return response;
         }
        
-       
         
         //Genera un PDF con el texto recibido y lo imprime en la impreosra especificada
         [HttpPost("generate")]
@@ -88,49 +87,125 @@ namespace PrintService.Controllers
                 //Crear el documento
                 Document doc = new Document(PageSize.LETTER, 20, 20,70,40);
 
-                PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(absolutePath, FileMode.Create));
-                writer.PageEvent = new HeaderFooter();
+                if (print.format == "Columnas")
+                {
+                   
 
-                //Head table body
-                Paragraph product_id = new Paragraph(print.column1, boldFontRedHead);
-                Paragraph product = new Paragraph(print.column2, boldFontRedHead);
-                Paragraph observation = new Paragraph(print.column3, boldFontRedHead);
+                    PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(absolutePath, FileMode.Create));
+                    writer.PageEvent = new HeaderFooter();
 
-                doc.Open();
+                    //Head table body
+                    Paragraph product_id = new Paragraph(print.column1, boldFontRedHead);
+                    Paragraph product = new Paragraph(print.column2, boldFontRedHead);
+                    Paragraph observation = new Paragraph(print.column3, boldFontRedHead);
 
-                //Table body
-                PdfPTable body = new PdfPTable(3);
-                body.HeaderRows = 1;
-                body.AddCell(new PdfPCell(product_id) { HorizontalAlignment = Element.ALIGN_LEFT, BorderWidthBottom = 1, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0, PaddingBottom = 5, PaddingTop = 15 });
-                body.AddCell(new PdfPCell(product) { HorizontalAlignment = Element.ALIGN_LEFT, BorderWidthBottom = 1, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0, PaddingBottom = 5, PaddingTop = 15 });
-                body.AddCell(new PdfPCell(observation) { HorizontalAlignment = Element.ALIGN_LEFT, BorderWidthBottom = 1, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0, PaddingBottom = 5, PaddingTop = 15 });
+                    doc.Open();
 
-                //Datos de las demas filas
-                Paragraph product_id_value = new Paragraph("CERT", normalFont);
-                Paragraph product_value = new Paragraph("Pellentesque consequat augue quis est interdum", normalFont);
-                Paragraph observation_value = new Paragraph("Fusce risus dolor, accumsan et vestibulum eget", normalFont);
+                    //Table body
+                    PdfPTable body = new PdfPTable(3);
+                    body.HeaderRows = 1;
+                    body.AddCell(new PdfPCell(product_id) { HorizontalAlignment = Element.ALIGN_LEFT, BorderWidthBottom = 1, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0, PaddingBottom = 5, PaddingTop = 15 });
+                    body.AddCell(new PdfPCell(product) { HorizontalAlignment = Element.ALIGN_LEFT, BorderWidthBottom = 1, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0, PaddingBottom = 5, PaddingTop = 15 });
+                    body.AddCell(new PdfPCell(observation) { HorizontalAlignment = Element.ALIGN_LEFT, BorderWidthBottom = 1, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0, PaddingBottom = 5, PaddingTop = 15 });
 
-                //Mas filas
-                body.AddCell(returnCell(product_id_value));
-                body.AddCell(returnCell(product_value));
-                body.AddCell(returnCell(observation_value));
+                    //Datos de las demas filas
+                    string[] rows = print.doc.Split("\n");
+                    foreach (var item in rows)
+                    {
+                        string[] columns = item.Split(",,");
+                        if (columns.Length == 2)
+                        {
 
-                body.AddCell(returnCell(new Paragraph()));
-                body.AddCell(returnCell(product_value));
-                body.AddCell(returnCell(observation_value));
+                            Paragraph product_id_value = new Paragraph("", normalFont);
+                            Paragraph product_value = new Paragraph(columns[0], normalFont);
+                            Paragraph observation_value = new Paragraph(columns[1], normalFont);
 
-                body.AddCell(returnCell(new Paragraph()));
-                body.AddCell(returnCell(product_value));
-                body.AddCell(returnCell(observation_value));
+                            body.AddCell(returnCell(product_id_value));
+                            body.AddCell(returnCell(product_value));
+                            body.AddCell(returnCell(observation_value));
 
-                body.WidthPercentage = 100f;
-                body.PaddingTop = 20;
-                var colWidthPercentagesBody = new[] { 15f, 35f, 50f };
-                body.SetWidths(colWidthPercentagesBody);
+                        }
+                        else
+                        {
+                            string text_value = "";
 
-                doc.Add(body);
-       
-                doc.Close();
+                            for (int i = 0; i < columns.Length; i++)
+                            {
+                                if (i != 0)
+                                {
+                                    text_value = text_value + columns[i];
+                                }
+                            }
+
+                            Paragraph product_id_value = new Paragraph("", normalFont);
+                            Paragraph product_value = new Paragraph(columns[0], normalFont);
+                            Paragraph observation_value = new Paragraph(text_value, normalFont);
+
+                            body.AddCell(returnCell(product_id_value));
+                            body.AddCell(returnCell(product_value));
+                            body.AddCell(returnCell(observation_value));
+                        }
+                    }
+
+                    body.WidthPercentage = 100f;
+                    body.PaddingTop = 20;
+                    var colWidthPercentagesBody = new[] { 15f, 35f, 50f };
+                    body.SetWidths(colWidthPercentagesBody);
+
+                    doc.Add(body);
+
+                    doc.Close();
+                }
+                else if (print.format == "Sin Columnas")
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(absolutePath, FileMode.Create));
+                    writer.PageEvent = new HeaderFooter();
+
+                    //Head table body
+                    Paragraph observation = new Paragraph(print.column3, boldFontRedHead);
+
+                    doc.Open();
+
+                    //Table body
+                    PdfPTable body = new PdfPTable(1);
+                    body.HeaderRows = 1;
+                    body.AddCell(new PdfPCell(observation) { HorizontalAlignment = Element.ALIGN_LEFT, BorderWidthBottom = 1, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0, PaddingBottom = 5, PaddingTop = 15 });
+
+                    //Datos de las demas filas
+                    Paragraph observation_value = new Paragraph(print.doc, normalFont);
+
+                    body.AddCell(returnCell(observation_value));
+
+                    body.WidthPercentage = 100f;
+                    body.PaddingTop = 20;
+                    var colWidthPercentagesBody = new[] { 100f };
+                    body.SetWidths(colWidthPercentagesBody);
+
+                    doc.Add(body);
+
+                    doc.Close();
+                }
+                else if (print.format == "Sin Formato")
+                {
+                    Document doc_none_format = new Document(PageSize.LETTER, 20, 20, 0, 0);
+
+                    PdfWriter writer = PdfWriter.GetInstance(doc_none_format, new FileStream(absolutePath, FileMode.Create));
+                   // writer.PageEvent = new HeaderFooter();
+
+                    Phrase conetnt = new Phrase();
+                    conetnt.Add(new Chunk(print.name_emited, boldFont));
+                    conetnt.Add(new Chunk($"\n\n{print.doc}", normalFont));
+
+
+                    doc_none_format.Open();
+
+
+                    doc_none_format.Add(conetnt);
+
+                    doc_none_format.Close();
+                }
+
+               
             }
             catch (Exception e)
             {

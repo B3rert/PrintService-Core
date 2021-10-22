@@ -15,7 +15,7 @@ namespace PrintService.Utilities
 
             var currentDirectory = Directory.GetCurrentDirectory(); //Ruta donden se encuntra el programa
 
-            PdfContentByte cb = writer.DirectContent;
+            PdfContentByte cb = writer.DirectContent; //PDF que está escribiendose
 
 
             //Fuentes
@@ -54,7 +54,6 @@ namespace PrintService.Utilities
             header.WriteSelectedRows(0, -1, 20, 790, writer.DirectContent);
 
             //Footer
-            //DateTime
             DateTime dateTime = DateTime.Now;
             var hora = dateTime.Hour;
             var suffix = (hora >= 12) ? " p.m." : " a.m.";
@@ -63,6 +62,9 @@ namespace PrintService.Utilities
             Phrase paginator = new Phrase();
             paginator.Add(new Chunk(fecha_hora, boldGray));
             paginator.Add(new Chunk($" Página {document.PageNumber}", normalFont9));
+
+            Globales.text_info = Globales.text_info.Replace("\t","  ");
+
             Paragraph text_info = new Paragraph(Globales.text_info, boldBlue);
 
             PdfPTable footer = new PdfPTable(3);
