@@ -258,7 +258,7 @@ namespace PrintService.Controllers
             return Ok(1);
         }
 
-        public PdfPCell returnCell(Paragraph text)
+        private PdfPCell returnCell(Paragraph text)
         {
             PdfPCell cell = new PdfPCell();
             cell.AddElement(text);
@@ -272,7 +272,7 @@ namespace PrintService.Controllers
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validar la compatibilidad de la plataforma", Justification = "<pendiente>")]
-        public bool IsPrinterOnline(string printerName)
+        private bool IsPrinterOnline(string printerName)
         {
             string str = "";
             bool online = false;
