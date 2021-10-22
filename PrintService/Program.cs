@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 
 namespace PrintService
 {
+    static class Globales
+    {
+        public static string name_emited;
+        public static string text_info;
+        public static string title_report;
+    }
+
     public class Program
     {
         public static void Main(string[] args)
