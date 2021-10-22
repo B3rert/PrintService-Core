@@ -26,12 +26,14 @@ namespace PrintService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
-            services.AddControllers();
+           
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PrintService", Version = "v1" });
             });
+
+            services.AddCors();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,8 +52,6 @@ namespace PrintService
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PrintService v1"));
             }
-
-            app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
 

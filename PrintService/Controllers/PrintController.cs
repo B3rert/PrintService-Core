@@ -85,7 +85,7 @@ namespace PrintService.Controllers
                 var boldBlue = FontFactory.GetFont(FontFactory.HELVETICA, 7, color_blue);
 
                 //Crear el documento
-                Document doc = new Document(PageSize.LETTER, 20, 20,70,40);
+                Document doc = new Document(PageSize.LETTER, 20, 20,70,75);
 
                 if (print.format == "Columnas")
                 {
@@ -93,7 +93,7 @@ namespace PrintService.Controllers
 
                     PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(absolutePath, FileMode.Create));
                     writer.PageEvent = new HeaderFooter();
-
+                    writer.AddViewerPreference(PdfName.PICKTRAYBYPDFSIZE, PdfBoolean.PDFTRUE);
                     //Head table body
                     Paragraph product_id = new Paragraph(print.column1, boldFontRedHead);
                     Paragraph product = new Paragraph(print.column2, boldFontRedHead);
@@ -160,7 +160,7 @@ namespace PrintService.Controllers
                 {
                     PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(absolutePath, FileMode.Create));
                     writer.PageEvent = new HeaderFooter();
-
+                    writer.AddViewerPreference(PdfName.PICKTRAYBYPDFSIZE, PdfBoolean.PDFTRUE);
                     //Head table body
                     Paragraph observation = new Paragraph(print.column3, boldFontRedHead);
 
@@ -190,7 +190,9 @@ namespace PrintService.Controllers
                     Document doc_none_format = new Document(PageSize.LETTER, 20, 20, 0, 0);
 
                     PdfWriter writer = PdfWriter.GetInstance(doc_none_format, new FileStream(absolutePath, FileMode.Create));
-                   // writer.PageEvent = new HeaderFooter();
+                    writer.AddViewerPreference(PdfName.PICKTRAYBYPDFSIZE, PdfBoolean.PDFTRUE);
+
+                    // writer.PageEvent = new HeaderFooter();
 
                     Phrase conetnt = new Phrase();
                     conetnt.Add(new Chunk(print.name_emited, boldFont));

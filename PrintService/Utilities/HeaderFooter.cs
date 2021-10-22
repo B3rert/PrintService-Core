@@ -34,7 +34,7 @@ namespace PrintService.Utilities
             logo_empresa.SetAbsolutePosition(465, 705);
             Image logo_dev = Image.GetInstance($"{currentDirectory}\\assets\\demosoft.jfif");
             logo_dev.ScalePercent(10f);
-            logo_dev.SetAbsolutePosition(535, 15);
+            logo_dev.SetAbsolutePosition(535, 40);
 
             cb.AddImage(logo_empresa);
             cb.AddImage(logo_dev);
@@ -49,9 +49,10 @@ namespace PrintService.Utilities
             header.AddCell(new PdfPCell(title_report) { HorizontalAlignment = Element.ALIGN_CENTER, BorderWidthBottom = 0, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0 });
             header.AddCell(new PdfPCell(new Paragraph(" ")) { BorderWidthBottom = 0, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0 });
             header.AddCell(new PdfPCell(new Paragraph(" ")) { BorderWidthBottom = 0, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0 });
+            header.AddCell(new PdfPCell(new Paragraph(" ")) { BorderWidthBottom = 0, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0 });
             header.AddCell(new PdfPCell(name_emmited) { HorizontalAlignment = Element.ALIGN_LEFT, BorderWidthBottom = 0, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0 });
 
-            header.WriteSelectedRows(0, -1, 20, 790, writer.DirectContent);
+            header.WriteSelectedRows(0, -1, 20, 797, writer.DirectContent);
 
             //Footer
             DateTime dateTime = DateTime.Now;
@@ -77,7 +78,7 @@ namespace PrintService.Utilities
             footer.AddCell(new PdfPCell(text_info) { HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_CENTER, BorderWidthBottom = 0, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0 });
             footer.AddCell(new PdfPCell(new Paragraph(" ")) { BorderWidthBottom = 0, BorderWidthLeft = 0, BorderWidthTop = 0, BorderWidthRight = 0 });
 
-            footer.WriteSelectedRows(0, -1, 20, 40, writer.DirectContent);
+            footer.WriteSelectedRows(0, -1, 20, 70, writer.DirectContent);
 
         }
     }
